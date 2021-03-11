@@ -11,10 +11,13 @@ class RuleOfThirds extends React.Component {
 
 constructor(props) {
 super(props);
-this.dimensions = React.createRef()
+this.imageRef = React.createRef()
+this.canvasRef = React.createRef()
 this.state = {
 object : [],
 base64: [],
+width: [],
+height: [],
 
 };
 }
@@ -34,43 +37,67 @@ reject(error);
 });
 };
 
-
-
 uploadImage = async (e) => {
 const file = e.target.files[0];
 const base64 = await this.convertBase64(file);
 this.setState({base64: base64, imageProps: file});
+this.getImageBrightness();
+}
+
+componentDidMount() {
+
+
+
+  }
+
+getImageBrightness() {
+    const canvas = this.canvasRef.current
+    var colorSum = 0;
+
+    const image = this.imageRef.current
+    
+    const ctx = canvas.getContext("2d")
+    image.onload = () => {
+        this.setState({width: image.width, height: image.height});
+        ctx.drawImage(image, 0, 0, this.state.width, this.state.height)
+        var imageData = ctx.getImageData(0,0,this.state.width,this.state.height);
+        var data = imageData.data;
+        var r,g,b,avg;
+
+          for(var x = 0, len = data.length; x < len; x+=4) {
+            r = data[x];
+            g = data[x+1];
+            b = data[x+2];
+
+            avg = Math.floor((r+g+b)/3);
+            colorSum += avg;
+ 
+        }
+
+        console.log(colorSum)
+        var brightness = Math.floor(colorSum / (canvas.width*canvas.height));
+        console.log(brightness)
+    }
+
+
+    canvas.onload = () => {
+
+    }
+
+        
 }
 
 
 
-
-
-
-uploadToDataBase() {
-    // var name = this.state.imageProps.name.split('.').slice(0, -1).join('.');
-
-    // fire.database().ref('Pictures/' +  name).update({
-    //     Downloads: this.state.downloadvalue,
-    //     Views: this.state.viewvalue,
-    //     DistanceToPointA: this.state.DistanceToPointA,
-    //     DistanceToPointB: this.state.DistanceToPointB,
-    //     DistanceToPointC: this.state.DistanceToPointC,
-    //     DistanceToPointD: this.state.DistanceToPointD,
-    //     Height: this.state.height,
-    //     Width: this.state.width,
-    //   });
-}
 
 render() {
     
 return (
     
-<div className="sharpness">
-    <div className="sharpness__image">
-
-        
-    <img ref={this.dimensions} src={this.state.base64} />
+<div className="brightness">
+    <div className="brightness__image">
+    <canvas ref={this.canvasRef} width={this.state.width} height={this.state.height}/>
+    <img ref={this.imageRef} src={this.state.base64}  />
     </div>
 
 

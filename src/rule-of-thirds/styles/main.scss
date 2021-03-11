@@ -1,7 +1,7 @@
-.rule-of-thirds {
+.brightness {
 
     &__image {
-        height: 100vh;
+
         &__gridoverlay {
             position: absolute;
             z-index: 99999;
@@ -22,5 +22,6 @@
     img {
         height: 75vh;
         position: relative;
+        
     }
 }
