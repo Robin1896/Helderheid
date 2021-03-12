@@ -1,11 +1,11 @@
 import React from 'react';
-import RuleOfThirds from './rule-of-thirds/components/index';
+import Brightness from './brightness/components/index';
 
 class App extends React.Component {
 
 render() {
   return (
-    <RuleOfThirds />
+    <Brightness />
   )};
 
 };
