@@ -59,7 +59,17 @@ class Brightness extends React.Component {
         }
         
         var brightness = Math.floor(colorSum / (canvas.width*canvas.height));
-        this.setState({brightness: brightness});
+
+        if(brightness > 128){
+            brightness = ((brightness * 100)/128 )-100
+            this.setState({brightness: brightness}); 
+            console.log("afbeelding mag wat donkerder")
+        } else if (brightness < 128){ 
+            brightness = (brightness * 100)/128
+            this.setState({brightness: brightness}); 
+            console.log("afbeelding mag wat lichter")
+        }
+
       }         
   }
 
@@ -70,7 +80,7 @@ render() {
       <div className="brightness__image">
         <canvas ref={this.canvasRef} width={this.state.width} height={this.state.height}/>
         <img ref={this.imageRef} src={this.state.base64} alt="afbeelding" />
-        <div>Helderheid:{this.state.brightness}</div>
+        <div>Helderheid:{this.state.brightness} %</div>
       </div>
       <br />
       <input className="filetest" type="file" onChange={(e)=> {this.uploadImage(e);}} />
